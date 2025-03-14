@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    /* Form Container */
+    .form-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        font-family: 'Poppins', sans-serif;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    /* Fade-in Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Label Styling */
+    .form-container label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Input and Textarea Base Styling */
+    .form-container input,
+    .form-container textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: transform 0.3s ease-in-out, border-color 0.3s, box-shadow 0.3s;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        resize: none;
+    }
+
+    /* Animated Placeholder Effect */
+    .form-container textarea::placeholder,
+    .form-container input::placeholder {
+        color: #aaa;
+        font-style: italic;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Glow Effect on Focus */
+    .form-container input:focus,
+    .form-container textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        outline: none;
+        transform: scale(1.02);
+    }
+
+    /* File Upload Customization */
+    .file-upload-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .custom-file-label {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background 0.3s ease-in-out, transform 0.3s;
+        text-align: center;
+    }
+
+    .custom-file-label:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    .form-container input[type="file"] {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    /* Submit Button */
+    .form-container button {
+        margin-top: 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 14px;
+        width: 100%;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: transform 0.3s ease-in-out, background 0.3s;
+    }
+
+    /* Lift Effect on Hover */
+    .form-container button:hover {
+        background-color: #218838;
+        transform: translateY(-3px);
+    }
+</style>
+
+<div class="form-container">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="project_description">📌 Project Description</label>
+        <textarea id="project_description" name="project_description" rows="2" placeholder="Describe your project..."
+            required></textarea>
+
+        <label for="github_link">🔗 GitHub Link</label>
+        <input type="url" id="github_link" name="github_link" placeholder="https://github.com/your-repo" required>
+
+        <label for="doubt_description">❓ Doubt Description</label>
+        <textarea id="doubt_description" name="doubt_description" rows="2" placeholder="Explain your doubt..."
+            required></textarea>
+
+        <label for="code_part">💻 Code Part</label>
+        <textarea id="code_part" name="code_part" rows="3" placeholder="Paste your code here..." required></textarea>
+
+        <!-- File Upload Section -->
+        <label>🖼️ Upload Image</label>
+        <div class="file-upload-container">
+            <label class="custom-file-label">Choose an Image</label>
+            <input type="file" id="image_upload" name="image_upload" accept="image/*">
+        </div>
+
+        <button type="submit">🚀 Submit</button>
+    </form>
+</div>
+
+{% endblock %}

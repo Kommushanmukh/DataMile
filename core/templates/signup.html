@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    @keyframes glow {
+        0% {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        50% {
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.8);
+        }
+
+        100% {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+    }
+
+    .signup-container {
+        width: 320px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        background: #f9f9f9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #333;
+        animation: bounce 1.2s infinite;
+    }
+
+    label {
+        display: block;
+        margin-top: 12px;
+        font-weight: bold;
+        text-align: left;
+        transition: transform 0.3s;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: box-shadow 0.3s, transform 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        transform: scale(1.03);
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+        transition: 0.3s;
+        animation: glow 1.5s infinite alternate;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    .login-redirect {
+        display: block;
+        margin-top: 15px;
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+        transition: color 0.3s, transform 0.2s;
+    }
+
+    .login-redirect:hover {
+        color: #0056b3;
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="signup-container">
+    <h2>Sign Up</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="roll_number">Roll Number:</label>
+        <input type="text" id="roll_number" name="roll_number" required>
+
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="student">Student</option>
+            <option value="mentor">Mentor</option>
+        </select>
+
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <a href="{% url 'login' %}" class="login-redirect">Already have an account? Log In</a>
+</div>
+{% endblock %}

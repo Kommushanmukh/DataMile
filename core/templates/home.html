@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Welcome Message -->
+<div class="welcome-container">
+    <h2>Welcome, {{ user.first_name }}!</h2>
+    <p class="roll-number">Your Roll Number: <span>{{ user.userprofile.roll_number }}</span></p>
+</div>
+
+<!-- Post Button -->
+<div class="post-button-container">
+    <a href="{% url 'post' %}" class="btn">Post</a>
+</div>
+
+<!-- Posts Section -->
+<div class="posts-container">
+    <h3>All Posts</h3>
+    {% for post in posts %}
+    <div class="post">
+        <div class="post-header">
+            <h4>{{ post.user.username }}</h4>
+            <span class="post-time">Posted on {{ post.created_at|date:"F j, Y, g:i a" }}</span>
+        </div>
+        <div class="post-content">
+            <p><strong>Project:</strong> {{ post.project_description }}</p>
+            <p><strong>GitHub:</strong> <a href="{{ post.github_link }}" target="_blank" class="github-link">View
+                    Code</a></p>
+            <p><strong>Doubt:</strong> {{ post.doubt_description }}</p>
+            <p><strong>Code:</strong></p>
+            <pre>{{ post.code_part }}</pre>
+            {% if post.image_upload %}
+            <div class="image-container">
+                <img src="{{ post.image_upload.url }}" alt="Uploaded Image" class="post-image">
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h5>Comments:</h5>
+            {% for comment in post.comments.all %}
+            <div class="comment">
+                <strong>{{ comment.user.userprofile.roll_number }}:</strong> {{ comment.text }}
+                <span class="comment-time">{{ comment.created_at|date:"F j, Y, g:i a" }}</span>
+            </div>
+            {% empty %}
+            <p class="no-comments">No comments yet. Be the first to comment!</p>
+            {% endfor %}
+
+            <!-- Add Comment Form -->
+            <form method="POST" class="comment-form">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <textarea name="text" placeholder="Write your comment..." required></textarea>
+                <button type="submit" class="comment-btn">Comment</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <p class="no-posts">No posts available.</p>
+    {% endfor %}
+</div>
+
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f4f7f6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .welcome-container {
+        text-align: center;
+        margin: 40px 0;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .welcome-container h2 {
+        font-size: 2rem;
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .roll-number {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .roll-number span {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    /* Post Button */
+    .post-button-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border-radius: 30px;
+        transition: 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Posts Section */
+    .posts-container {
+        max-width: 600px;
+        margin: 80px auto 20px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .post {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 15px 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+    }
+
+    .post:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .post-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .post-header h4 {
+        font-size: 1.1rem;
+        color: #007bff;
+        margin: 0;
+    }
+
+    .post-time {
+        font-size: 0.8rem;
+        color: #777;
+    }
+
+    .post-content {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        text-align: left;
+        /* Ensure all text is left-aligned */
+    }
+
+    .post-content p {
+        margin: 0 0 10px 0;
+        /* Add some margin between paragraphs */
+    }
+
+    .github-link {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .github-link:hover {
+        text-decoration: underline;
+    }
+
+    pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.8rem;
+        text-align: left;
+        /* Ensure code is left-aligned */
+    }
+
+    .image-container {
+        margin-top: 10px;
+        text-align: left;
+        /* Ensure images are left-aligned */
+    }
+
+    .post-image {
+        max-width: 30%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-posts {
+        text-align: center;
+        font-size: 1rem;
+        color: #777;
+    }
+
+    /* Comments Section */
+    .comments-section {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .comments-section h5 {
+        font-size: 1rem;
+        color: #007bff;
+        margin-bottom: 10px;
+        text-align: left;
+        /* Ensure comments header is left-aligned */
+    }
+
+    .comment {
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        text-align: left;
+        /* Ensure comments are left-aligned */
+    }
+
+    .comment strong {
+        color: #007bff;
+    }
+
+    .comment-time {
+        font-size: 0.7rem;
+        color: #777;
+        margin-left: 10px;
+    }
+
+    .no-comments {
+        font-size: 0.8rem;
+        color: #777;
+        text-align: left;
+        /* Ensure no comments message is left-aligned */
+    }
+
+    /* Comment Form */
+    .comment-form {
+        margin-top: 10px;
+    }
+
+    .comment-form textarea {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        resize: vertical;
+        font-family: 'Poppins', sans-serif;
+        text-align: left;
+        /* Ensure textarea text is left-aligned */
+    }
+
+    .comment-form textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        outline: none;
+    }
+
+    .comment-btn {
+        display: block;
+        margin-top: 8px;
+        padding: 6px 12px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: background 0.3s;
+    }
+
+    .comment-btn:hover {
+        background-color: #218838;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .welcome-container h2 {
+            font-size: 1.5rem;
+        }
+
+        .roll-number {
+            font-size: 0.9rem;
+        }
+
+        .posts-container {
+            max-width: 90%;
+        }
+
+        .posts-container h3 {
+            font-size: 1.2rem;
+        }
+
+        .post-header h4 {
+            font-size: 1rem;
+        }
+
+        .post-time {
+            font-size: 0.7rem;
+        }
+
+        .post-content {
+            font-size: 0.8rem;
+        }
+
+        pre {
+            font-size: 0.7rem;
+        }
+
+        .comments-section h5 {
+            font-size: 0.9rem;
+        }
+
+        .comment {
+            font-size: 0.8rem;
+        }
+
+        .comment-time {
+            font-size: 0.6rem;
+        }
+
+        .comment-form textarea {
+            font-size: 0.7rem;
+        }
+
+        .comment-btn {
+            font-size: 0.7rem;
+        }
+
+        .post-image {
+            max-width: 50%;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataMile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #007bff, #00d4ff);
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            min-width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .signup-btn {
+            background: #28a745;
+        }
+
+        .signup-btn:hover {
+            background: #218838;
+        }
+
+        .login-btn {
+            background: #007bff;
+        }
+
+        .login-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        {% if request.path == '/' %}
+        <h1>Welcome to DataMile</h1>
+        <div class="btn-container">
+            <a href="{% url 'signup' %}" class="btn signup-btn">Sign Up</a>
+            <a href="{% url 'login' %}" class="btn login-btn">Log In</a>
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>
